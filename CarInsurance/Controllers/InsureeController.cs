@@ -194,7 +194,12 @@ namespace CarInsurance.Controllers
 
         public ActionResult Admin()
         {
-            var insurees = db.Insurees.ToList(); // Fetch all insurees from the database
+            if (Session["IsAdmin"] as bool? != true)
+            {
+                return RedirectToAction("Index", "Home"); 
+            }
+
+            var insurees = db.Insurees.ToList();
             return View(insurees);
         }
 
@@ -202,7 +207,8 @@ namespace CarInsurance.Controllers
         {
             if (username == "admin" && password == "admin")
             {
-                return RedirectToAction("Admin"); // Redirect to the Admin view on success
+                Session["IsAdmin"] = true;
+                return RedirectToAction("Admin");
             }
             else
             {
